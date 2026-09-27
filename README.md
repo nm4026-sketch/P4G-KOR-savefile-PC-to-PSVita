@@ -1,5 +1,19 @@
-# P4G-KOR-savefile-PC-to-PSVita
 # Persona 4 Golden Steam → Korean PS Vita Save Converter
+
+> ⚠️ **Important / 중요**
+>
+> 이 프로그램은 **커스텀 펌웨어(CFW / HENkaku)가 적용된 PS Vita 전용**입니다.  
+> PS Vita에 **vita-savemgr (Vita Save Manager)**가 설치되어 있어야 합니다.
+>
+> This tool requires a **modded PS Vita running custom firmware / HENkaku**.  
+> **vita-savemgr (Vita Save Manager)** must also be installed on the Vita.
+>
+> 이 프로그램은 **OpenAI ChatGPT의 도움을 받아 제작되었습니다.**  
+> 실제 Steam / 한국 Vita 세이브 파일의 비교, 반복적인 실기 테스트 및 결과 검증을 기반으로 변환 규칙을 찾아 제작되었습니다.
+>
+> This program was **developed with the assistance of OpenAI ChatGPT**, based on byte-level save-file analysis and repeated testing on actual PS Vita hardware.
+
+---
 
 Steam판 **Persona 4 Golden** 세이브를 **한국어 PS Vita판 (`PCSH00021`)**에서 사용할 수 있도록 변환하는 도구입니다.
 
@@ -10,6 +24,21 @@ Steam판 **Persona 4 Golden** 세이브를 **한국어 PS Vita판 (`PCSH00021`)*
 ---
 
 # 한국어
+
+## 필수 조건
+
+이 프로그램을 사용하려면 다음 조건이 필요합니다.
+
+- **커펌된 PS Vita**
+  - HENkaku / Enso 등 홈브류 실행이 가능한 환경
+- **vita-savemgr 설치**
+- Persona 4 Golden 한국판
+  - Title ID: `PCSH00021`
+- Persona 4 Golden Steam판 세이브
+- PC
+- Python 3.9 이상
+
+정품 순정 상태의 PS Vita에서는 사용할 수 없습니다.
 
 ## 주요 기능
 
@@ -122,11 +151,13 @@ Korean 0x0068–0x150FF
 
 ## 사용 방법
 
-1. 한국판 Persona 4 Golden에서 정상적인 세이브를 하나 만듭니다.
+1. 커펌된 PS Vita에 `vita-savemgr`를 설치합니다.
 
-2. PS Vita에서 `vita-savemgr`를 실행합니다.
+2. 한국판 Persona 4 Golden에서 정상적인 세이브를 하나 만듭니다.
 
-3. `PCSH00021`의 백업 SLOT을 **vita-savemgr에서 직접 생성**합니다.
+3. PS Vita에서 `vita-savemgr`를 실행합니다.
+
+4. `PCSH00021`의 백업 SLOT을 **vita-savemgr에서 직접 생성**합니다.
 
 예:
 
@@ -134,11 +165,11 @@ Korean 0x0068–0x150FF
 ux0:data/savegames/PCSH00021/SLOT0
 ```
 
-4. 해당 vita-savemgr SLOT을 PC에서 접근할 수 있도록 합니다.
+5. 해당 vita-savemgr SLOT을 USB / FTP 등을 이용하여 PC에서 접근할 수 있도록 합니다.
 
-5. 프로그램을 실행합니다.
+6. 프로그램을 실행합니다.
 
-6. Steam Persona 4 Golden의 save 폴더를 선택합니다.
+7. Steam Persona 4 Golden의 save 폴더를 선택합니다.
 
 일반적인 위치:
 
@@ -146,7 +177,7 @@ ux0:data/savegames/PCSH00021/SLOT0
 Steam\userdata\<SteamID>\1113000\remote
 ```
 
-7. Vita에서 직접 생성된 기존:
+8. Vita에서 직접 생성된 기존:
 
 ```text
 PCSH00021\SLOTn
@@ -154,15 +185,15 @@ PCSH00021\SLOTn
 
 폴더를 선택합니다.
 
-8. Steam 원본 세이브 슬롯을 선택합니다.
+9. Steam 원본 세이브 슬롯을 선택합니다.
 
-9. Vita 대상 게임 슬롯을 선택합니다.
+10. Vita 대상 게임 슬롯을 선택합니다.
 
-10. 변환을 실행합니다.
+11. 변환을 실행합니다.
 
-11. 변환 후 PS Vita에서 **같은 vita-savemgr SLOT**을 Restore 합니다.
+12. 변환 후 PS Vita에서 **같은 vita-savemgr SLOT**을 Restore 합니다.
 
-12. Persona 4 Golden을 실행하고 세이브를 로드합니다.
+13. Persona 4 Golden을 실행하고 세이브를 로드합니다.
 
 ## 매우 중요
 
@@ -214,18 +245,29 @@ Documents\P4G_Vita_Backups
 
 게임에서 변환된 세이브를 정상적으로 불러온 뒤 다시 저장하면 게임이 해당 정보를 다시 갱신할 수 있습니다.
 
-## 요구 사항
+## 개발 정보
 
-- Python 3.9 이상
-- Persona 4 Golden Steam판
-- Persona 4 Golden 한국 PS Vita판
-- Title ID: `PCSH00021`
-- `vita-savemgr`
-- 세이브 백업 및 Restore가 가능한 PS Vita 환경
+이 프로그램은 **OpenAI ChatGPT의 도움을 받아 Python으로 제작되었습니다.**
+
+개발 과정에서는:
+
+- Steam 세이브와 한국 Vita 세이브의 바이너리 비교
+- 세이브 구조 및 offset 분석
+- 문제 영역에 대한 단계적 binary bisect
+- 실제 PS Vita에서의 반복적인 로드 테스트
+- `C2-12828-1` 오류 발생 구간 추적
+
+등을 통해 한국판에서 정상적으로 동작하는 변환 규칙을 찾아냈습니다.
+
+ChatGPT가 코드 작성 및 분석을 지원했으며, 실제 기기 테스트와 결과 확인을 통해 변환 방식을 검증했습니다.
 
 ## 현재 상태
 
-현재 버전은 **Experimental / Hardware Tested** 상태입니다.
+현재 버전은:
+
+**Experimental / Hardware Tested**
+
+상태입니다.
 
 다음 사항은 실제 PS Vita에서 확인되었습니다.
 
@@ -242,13 +284,28 @@ Steam 인간 파라미터 계승 확인
 
 항상 원본 Vita 세이브를 별도로 백업해 두세요.
 
-이 프로젝트는 비공식 커뮤니티 도구이며 ATLUS, SEGA, Sony, Valve와 관련이 없습니다.
+이 프로젝트는 비공식 커뮤니티 도구이며 ATLUS, SEGA, Sony, Valve 또는 OpenAI의 공식 제품이 아닙니다.
 
 Persona 4 Golden 및 관련 상표의 권리는 각 권리자에게 있습니다.
 
 ---
 
 # English
+
+## Requirements
+
+Before using this tool, please note that it requires:
+
+- A **modded PS Vita**
+  - HENkaku / Enso or another environment capable of running homebrew
+- **vita-savemgr / Vita Save Manager installed on the Vita**
+- Korean PS Vita version of Persona 4 Golden
+  - Title ID: `PCSH00021`
+- Persona 4 Golden Steam save data
+- A PC
+- Python 3.9 or newer
+
+This tool cannot be used on an unmodified stock PS Vita.
 
 ## Overview
 
@@ -321,7 +378,7 @@ The difference is exactly:
 0x10 = 16 bytes
 ```
 
-The known size difference between the Korean and PC name-related structures is also `0x10`, suggesting that this value is related to an internal Korean-specific structure offset or size.
+The known size difference between the Korean and PC name-related structures is also `0x10`, suggesting that this value may be related to a Korean-specific internal structure offset or size.
 
 For this reason, the converter always preserves the original Korean value at `0x44`.
 
@@ -370,11 +427,13 @@ Korean 0x0068–0x150FF
 
 ## Usage
 
-1. Create a valid save in the Korean PS Vita version of Persona 4 Golden.
+1. Install `vita-savemgr` on a modded PS Vita.
 
-2. Run `vita-savemgr` on the Vita.
+2. Create a valid save in the Korean PS Vita version of Persona 4 Golden.
 
-3. Create a backup SLOT for `PCSH00021` directly using `vita-savemgr`.
+3. Run `vita-savemgr` on the Vita.
+
+4. Create a backup SLOT for `PCSH00021` directly using `vita-savemgr`.
 
 Example:
 
@@ -382,11 +441,11 @@ Example:
 ux0:data/savegames/PCSH00021/SLOT0
 ```
 
-4. Make that savemgr SLOT accessible from your PC.
+5. Make that savemgr SLOT accessible from your PC using USB, FTP, or another method.
 
-5. Run the converter.
+6. Run the converter.
 
-6. Select your Steam Persona 4 Golden save directory.
+7. Select your Steam Persona 4 Golden save directory.
 
 Typical location:
 
@@ -394,7 +453,7 @@ Typical location:
 Steam\userdata\<SteamID>\1113000\remote
 ```
 
-7. Select the existing:
+8. Select the existing:
 
 ```text
 PCSH00021\SLOTn
@@ -402,17 +461,17 @@ PCSH00021\SLOTn
 
 folder that was created directly by `vita-savemgr`.
 
-8. Select the Steam source save slot.
+9. Select the Steam source save slot.
 
-9. Select the Vita target game slot.
+10. Select the Vita target game slot.
 
-10. Run the conversion.
+11. Run the conversion.
 
-11. Return to the Vita.
+12. Return to the Vita.
 
-12. Restore the **same vita-savemgr SLOT**.
+13. Restore the **same vita-savemgr SLOT**.
 
-13. Launch Persona 4 Golden and load the save.
+14. Launch Persona 4 Golden and load the save.
 
 ## Very Important
 
@@ -466,14 +525,20 @@ This does not necessarily represent the actual converted game-state data.
 
 After successfully loading the converted save and saving again in-game, the game may refresh this metadata itself.
 
-## Requirements
+## Development
 
-- Python 3.9 or newer
-- Persona 4 Golden on Steam
-- Korean PS Vita release of Persona 4 Golden
-- Title ID: `PCSH00021`
-- `vita-savemgr`
-- A PS Vita environment capable of backing up and restoring save data
+This tool was **developed in Python with the assistance of OpenAI ChatGPT**.
+
+The development process involved:
+
+- Byte-level comparison of Steam and Korean Vita save files
+- Save structure and offset analysis
+- Binary bisect testing of problematic regions
+- Repeated testing on actual PS Vita hardware
+- Investigation of the `C2-12828-1` crash
+- Identification of Korean-specific save structure differences
+
+ChatGPT assisted with code generation and binary analysis, while the conversion rules were validated through actual hardware testing and observed results.
 
 ## Project Status
 
@@ -490,12 +555,12 @@ Steam money transferred correctly
 Steam Social Stats transferred correctly
 ```
 
-Additional testing with different game progress points and NG+ saves is welcome.
+Additional testing with different game progress points and New Game+ saves is welcome.
 
 ## Disclaimer
 
 Always keep an untouched backup of your original Vita save.
 
-This is an unofficial community tool and is not affiliated with ATLUS, SEGA, Sony, or Valve.
+This is an unofficial community tool and is not an official product of ATLUS, SEGA, Sony, Valve, or OpenAI.
 
 Persona 4 Golden and all related trademarks belong to their respective owners.
