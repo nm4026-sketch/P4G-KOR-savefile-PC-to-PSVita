@@ -1,0 +1,100 @@
+Persona 4 Golden
+Steam -> 한국 PS Vita PCSH00021
+Final Converter v1.0
+================================
+
+이 프로그램은 실제 Steam / 한국 Vita 세이브 파일과 Vita 실기 테스트를 통해
+확인한 FULL_EXCEPT_0044 변환 규칙을 사용합니다.
+
+확인된 결과
+-----------
+- 변환 세이브 정상 LOAD
+- C2-12828-1 없음
+- Steam 소지금 계승 확인
+- Steam 인간 파라미터(Social Stats) 계승 확인
+
+중요한 발견
+-----------
+한국판 PCSH00021은 북미/유럽 Vita판과 완전히 같은 pre-Rescue 구조가 아닙니다.
+
+특히 한국판 KR 0x44 값을 Steam 대응값으로 바꾸면 C2-12828-1이 발생했습니다.
+
+실제 비교:
+  Korean KR 0x44-0x47 = 64 0C 00 00  = 0x00000C64
+  Steam  PC 0x54-0x57 = 74 0C 00 00  = 0x00000C74
+
+차이 = 0x10 bytes.
+
+따라서 최종 변환기는 KR 0x44를 반드시 한국판 원본으로 보존합니다.
+
+최종 변환 규칙
+-------------
+보존:
+- KR 0x0010-0x0023 : 한국판 이름 버퍼 #1
+- KR 0x0044        : 한국판 고유 구조값
+- KR 0x0054-0x0067 : 한국판 이름 버퍼 #2
+- KR 0x15100 이후  : Rescue / Retry / tail
+- sdslot.dat
+- system.bin
+- 한국판 checksum byte
+
+Steam에서 이식:
+- 그 외 KR 0x15100 이전 매핑 가능한 모든 게임 데이터
+
+이 구조에는 돈, 인간 파라미터, Compendium, Inventory 및
+NG+ / 진행 상태와 관련된 main save 데이터가 포함됩니다.
+
+매핑
+----
+KR 0x0000-0x000F <- PC same offset
+
+KR 0x0024-0x0053 <- PC +0x10
+단, KR 0x0044는 복사하지 않고 한국판 원본 유지
+
+KR 0x0068-0x150FF <- PC +0x20
+
+한국판 이름 버퍼는 PC에서 복사하지 않습니다.
+
+매우 중요: vita-savemgr SLOT
+----------------------------
+PC에서 SLOT0 -> SLOT1 형태로 폴더를 직접 복사해 만들면 안 됩니다.
+
+실기 테스트:
+  vita-savemgr가 직접 만든 SLOT -> 정상
+  Windows에서 복사해 만든 CONTROL SLOT -> C2-12828-1
+
+따라서 반드시 Vita의 vita-savemgr가 직접 생성한 기존 SLOTn을 사용해야 합니다.
+
+사용법
+------
+1. Vita에서 한국판 P4G PCSH00021로 정상 세이브를 하나 만듭니다.
+2. vita-savemgr에서 테스트/변환용 백업 SLOT을 직접 Dump합니다.
+3. PC에서 Final Converter 실행.
+4. Steam P4G remote 폴더 선택.
+5. vita-savemgr가 직접 만든 기존:
+       ...\data\savegames\PCSH00021\SLOTn
+   선택.
+6. Steam 원본 게임 슬롯 선택.
+7. Vita 대상 게임 슬롯 선택.
+8. "Steam -> 한국 Vita 세이브 변환" 클릭.
+9. 변환 직전 전체 savemgr SLOT은 자동 ZIP 백업됩니다:
+       Documents\P4G_Vita_Backups
+10. Vita로 돌아가 방금 수정한 SAME SLOT을 vita-savemgr에서 Restore.
+11. P4G 실행 -> LOAD.
+
+주의
+----
+- 새 savemgr SLOT은 프로그램이 생성하지 않습니다.
+- 기존 vita-savemgr SLOT을 in-place로 수정합니다.
+- 대상 SLOT은 변환 전에 전체 ZIP으로 자동 백업됩니다.
+- GUI의 "ZIP 백업 복원"으로 기존 SLOT을 이전 상태로 되돌릴 수 있습니다.
+- sdslot.dat은 의도적으로 수정하지 않습니다.
+  따라서 LOAD 화면의 표시 정보가 기존 한국판 세이브처럼 보일 수 있습니다.
+- 게임에서 정상 LOAD 후 한 번 다시 저장하면 게임이 세이브 표시 메타데이터를
+  자체적으로 갱신할 수 있습니다.
+
+Python
+------
+Python 3.9 이상 권장.
+Python 설치 시 "Add python.exe to PATH"를 활성화하세요.
+Anaconda는 권장하지 않습니다.

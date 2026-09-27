@@ -1,0 +1,8 @@
+P4G Steam to Korean Vita Save Converter
+
+This repository/package contains only independently created conversion code and
+documentation. It does not include Persona 4 Golden game files, PS Vita
+firmware, encryption keys, copyrighted game assets, actual user save data, or
+console modification software.
+
+Persona 4 Golden and related trademarks belong to their respective owners.
